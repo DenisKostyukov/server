@@ -17,7 +17,7 @@ const routerGET = {
 }
 
 const requestListener = async (req, res) => {
-  if (routerGET[req.url]) {
+  if ( req.method === "GET" && routerGET[req.url]) {
     return routerGET[req.url](req, res)
   }
   const data = await fs.readFile('./views/error.html', 'utf-8')
