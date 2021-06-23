@@ -1,20 +1,29 @@
-async function getPrimitivesAsync () {
-  return [1, '1', true, null, undefined, BigInt(5), Symbol()]
-}
-async function getPrimitive () {
-  const primitives = await getPrimitivesAsync()
-  console.log(primitives)
-  return primitives;
+const http = require('http')
+const fs = require('fs').promises
+
+const routerGET = {
+  '/': async (req, res) => {
+    const data = await fs.readFile('./views/index.html', 'utf-8')
+    res.end(data)
+  },
+  '/contacts.html': async (req, res) => {
+    const data = await fs.readFile('./views/contacts.html', 'utf-8')
+    res.end(data)
+  },
+  '/about.html': async (req, res) => {
+    const data = await fs.readFile('./views/about.html', 'utf-8')
+    res.end(data)
+  }
 }
 
-
-async function getPromise(){
-  const promise = new Promise(res => {
-    setTimeout(()=>{
-     return res(2)
-    }, 4000)
-  })
-  const myPromise = await promise
-  console.log(myPromise)
-  return myPromise
+const requestListener = async (req, res) => {
+  if (routerGET[req.url]) {
+    return routerGET[req.url](req, res)
+  }
+  const data = await fs.readFile('./views/error.html', 'utf-8')
+  res.end(data)
 }
+
+const server = http.createServer(requestListener)
+
+server.listen(3000)
