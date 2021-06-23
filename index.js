@@ -1,29 +1,8 @@
-const http = require('http')
-const fs = require('fs').promises
+const express = require('express')
+const app = express()
 
-const routerGET = {
-  '/': async (req, res) => {
-    const data = await fs.readFile('./views/index.html', 'utf-8')
-    res.end(data)
-  },
-  '/contacts.html': async (req, res) => {
-    const data = await fs.readFile('./views/contacts.html', 'utf-8')
-    res.end(data)
-  },
-  '/about.html': async (req, res) => {
-    const data = await fs.readFile('./views/about.html', 'utf-8')
-    res.end(data)
-  }
-}
+const PORT = 3000
 
-const requestListener = async (req, res) => {
-  if ( req.method === "GET" && routerGET[req.url]) {
-    return routerGET[req.url](req, res)
-  }
-  const data = await fs.readFile('./views/error.html', 'utf-8')
-  res.end(data)
-}
-
-const server = http.createServer(requestListener)
-
-server.listen(3000)
+app.listen(PORT,()=>{
+  console.log(`Server is running on ${PORT} port`)
+})
